@@ -20,8 +20,16 @@ form.addEventListener('submit', async (event) => {
         const data = await response.json();
         const createdAt = new Date(data.created_at);
         createdAtDisplay.textContent = createdAt.toISOString().split('T')[0];
-        const accountAge = new Date().getFullYear() - createdAt.getFullYear();
-        accountAgeDisplay.textContent = accountAge + ' years';
+        
+        // Calculate account age in whole years
+        const now = new Date();
+        let ageInYears = now.getFullYear() - createdAt.getFullYear();
+        const monthDiff = now.getMonth() - createdAt.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < createdAt.getDate())) {
+            ageInYears--;
+        }
+        
+        accountAgeDisplay.textContent = ageInYears + ' years';
         statusDisplay.textContent = 'Lookup succeeded.';
     } catch (error) {
         createdAtDisplay.textContent = 'Error: ' + error.message;
